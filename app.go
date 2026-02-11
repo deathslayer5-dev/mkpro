@@ -27,6 +27,7 @@ func main() {
 		"project":   false,
 		"git":       false,
 		"git-local": false,
+		"file":      false,
 	}
 	name := ""
 	remote := ""
@@ -50,6 +51,10 @@ func main() {
 		if arg == "--git" {
 			options["git"] = true
 			next = true
+			continue
+		}
+		if arg == "-f" || arg == "--file" {
+			options["file"] = true
 			continue
 		}
 		if !strings.HasPrefix(arg, "--") {
@@ -79,7 +84,7 @@ func main() {
 		fmt.Printf("Version: v%s\n", versionNo)
 		os.Exit(0)
 	}
-	if strings.Count(name, ".") == 1 {
+	if strings.Count(name, ".") == 1 || options["file"] {
 		cmd := exec.Command("touch", name)
 		fmt.Printf("Creating file: %s\n", name)
 		_, err := cmd.CombinedOutput()
