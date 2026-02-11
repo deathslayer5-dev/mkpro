@@ -12,8 +12,12 @@ func main() {
 
 	versionNo := "1.0.0"
 
+	GREEN := "\x1b[32m"
+	RED := "\x1b[31m"
+	NC := "\x1b[0m"
+
 	if len(os.Args) < 2 {
-		fmt.Println("Expected mkpro <name> function")
+		fmt.Println(RED, "Expected mkpro <name> function", NC)
 		os.Exit(1)
 	}
 	options := map[string]bool{
@@ -58,10 +62,10 @@ func main() {
 		}
 	}
 	if changed == false && next == true {
-		log.Fatal("Missing remote name")
+		log.Fatal(RED, "Missing remote name", NC)
 	}
 	if name == "" {
-		log.Fatal("Missing mkpro function")
+		log.Fatal(RED, "Missing mkpro function", NC)
 	}
 	if options["help"] {
 		fmt.Println("Usage: mkpro \"--options\" <name>")
@@ -78,9 +82,9 @@ func main() {
 	fmt.Printf("Creating directory: %s\n", name)
 	_, err := cmd.Output()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(RED, err, NC)
 	}
-	fmt.Printf("Successfully created: %s\n", name)
+	fmt.Printf("%sSuccessfully created: %s%s\n", GREEN, name, NC)
 
 	if options["project"] {
 		dir := fmt.Sprintf("%s%s", name, "/src")
@@ -88,26 +92,26 @@ func main() {
 		fmt.Printf("Creating directory: %s\n", dir)
 		_, err := cmd.Output()
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal(RED, err, NC)
 		}
-		fmt.Printf("Successfully created: %s\n", dir)
+		fmt.Printf("%s,Successfully created: %s%s\n", GREEN, dir, NC)
 
-		dir = fmt.Sprintf("%s%s%s", name, "src", "/resources")
+		dir = fmt.Sprintf("%s%s%s", name, "/src", "/resources")
 		cmd = exec.Command("mkdir", "-p", dir)
 		fmt.Printf("Creating directory: %s\n", dir)
 		_, err = cmd.Output()
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal(RED, err, NC)
 		}
-		fmt.Printf("Successfully created: %s\n", dir)
-		dir = fmt.Sprintf("%s%s%s", name, "src", "/main")
+		fmt.Printf("%s,Successfully created: %s%s\n", GREEN, dir, NC)
+		dir = fmt.Sprintf("%s%s%s", name, "/src", "/main")
 		cmd = exec.Command("mkdir", "-p", dir)
 		fmt.Printf("Creating directory: %s\n", dir)
 		_, err = cmd.Output()
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal(RED, err, NC)
 		}
-		fmt.Printf("Successfully created: %s\n", dir)
+		fmt.Printf("%sSuccessfully created: %s%s\n", GREEN, dir, NC)
 	}
 	if options["java"] {
 		dir := fmt.Sprintf("%s%s", name, "/src")
@@ -115,53 +119,53 @@ func main() {
 		fmt.Printf("Creating directory: %s\n", dir)
 		_, err := cmd.Output()
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal(RED, err, NC)
 		}
-		fmt.Printf("Successfully created: %s\n", dir)
+		fmt.Printf("%sSuccessfully created: %s%s\n", GREEN, dir, NC)
 
 		dir = fmt.Sprintf("%s%s%s", name, "/src", "/main")
 		cmd = exec.Command("mkdir", "-p", dir)
 		fmt.Printf("Creating directory: %s\n", dir)
 		_, err = cmd.Output()
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal(RED, err, NC)
 		}
-		fmt.Printf("Successfully created: %s\n", dir)
+		fmt.Printf("%sSuccessfully created: %s%s\n", GREEN, dir, NC)
 
 		dir = fmt.Sprintf("%s%s%s", name, "/src", "/resources")
 		cmd = exec.Command("mkdir", "-p", dir)
 		fmt.Printf("Creating directory: %s\n", dir)
 		_, err = cmd.Output()
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal(RED, err, NC)
 		}
-		fmt.Printf("Successfully created: %s\n", dir)
+		fmt.Printf("%sSuccessfully created: %s%s\n", GREEN, dir, NC)
 
 		dir = fmt.Sprintf("%s%s", name, "/bin")
 		cmd = exec.Command("mkdir", "-p", dir)
 		fmt.Printf("Creating directory: %s\n", dir)
 		_, err = cmd.Output()
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal(RED, err, NC)
 		}
-		fmt.Printf("Successfully created: %s\n", dir)
+		fmt.Printf("%sSuccessfully created: %s%s\n", GREEN, dir, NC)
 
 		dir = fmt.Sprintf("%s%s", name, "/.project_env")
 		cmd = exec.Command("touch", "-p", dir)
 		fmt.Printf("Creating file: %s\n", dir)
 		_, err = cmd.Output()
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal(RED, err, NC)
 		}
-		fmt.Printf("Successfully created: %s\n", dir)
+		fmt.Printf("%sSuccessfully created: %s%s\n", GREEN, dir, NC)
 
 		cmd = exec.Command("echo", "\"alias", "javac='javac -d bin'\"", ">", dir)
 		fmt.Printf("Writing to file: %s\n", dir)
 		_, err = cmd.Output()
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal(RED, err, NC)
 		}
-		fmt.Printf("Successfully wrote to : %s\n", dir)
+		fmt.Printf("%sSuccessfully wrote to : %s%s\n", GREEN, dir, NC)
 	}
 	if options["git"] {
 		cmd := exec.Command("git", "init")
@@ -169,12 +173,12 @@ func main() {
 
 		output, err := cmd.CombinedOutput()
 		if err != nil {
-			log.Fatalf("Failed to initialize git: %v\nOutput: %s", err, output)
+			log.Fatalf("%sFailed to initialize git: %v\nOutput: %s%s", RED, err, output, NC)
 		}
 		if len(output) > 0 {
 			fmt.Printf("git init output: %s", output)
 		} else {
-			fmt.Println("✓ Initialized git repository")
+			fmt.Println(GREEN, "✓ Initialized git repository", NC)
 		}
 
 		fmt.Printf("Adding remote: %s\n", remote)
@@ -184,16 +188,15 @@ func main() {
 		output, err = cmd.CombinedOutput()
 		if err != nil {
 			if strings.Contains(string(output), "already exists") {
-				fmt.Println("✓ Remote 'origin' already exists")
-				fmt.Println("Replacing 'origin'...")
+				fmt.Println(RED, "✓ Remote 'origin' already exists", NC)
 			} else {
-				log.Fatalf("Failed to add remote: %v\nOutput: %s", err, output)
+				log.Fatalf("%sFailed to add remote: %v\nOutput: %s%s", RED, err, output, NC)
 			}
 		} else {
 			if len(output) > 0 {
-				fmt.Printf("Remote added: %s", output)
+				fmt.Printf("%sRemote added: %s%s", GREEN, output, NC)
 			} else {
-				fmt.Println("✓ Added remote 'origin'")
+				fmt.Println(GREEN, "✓ Added remote 'origin'", NC)
 			}
 		}
 	}
@@ -202,10 +205,10 @@ func main() {
 		cmd := exec.Command("git", "init")
 		cmd.Dir = name
 
-		output, err := cmd.Output()
+		output, err := cmd.CombinedOutput()
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal(RED, err, NC)
 		}
-		fmt.Printf("Successfully initialized: %s\n", output)
+		fmt.Printf("%sSuccessfully initialized: %s%s\n", GREEN, output, NC)
 	}
 }
