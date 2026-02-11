@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	versionNo := "1.0.0"
+	versionNo := "1.0.1"
 
 	GREEN := "\x1b[32m"
 	RED := "\x1b[31m"
@@ -18,7 +18,7 @@ func main() {
 
 	if len(os.Args) < 2 {
 		fmt.Println(RED, "Expected mkpro <name> function", NC)
-		os.Exit(1)
+		os.Exit(-1)
 	}
 	options := map[string]bool{
 		"help":      false,
@@ -67,6 +67,7 @@ func main() {
 	if name == "" {
 		log.Fatal(RED, "Missing mkpro function", NC)
 	}
+
 	if options["help"] {
 		fmt.Println("Usage: mkpro \"--options\" <name>")
 		for n := range options {
@@ -76,6 +77,16 @@ func main() {
 	}
 	if options["version"] {
 		fmt.Printf("Version: v%s\n", versionNo)
+		os.Exit(0)
+	}
+	if strings.Count(name, ".") == 1 {
+		cmd := exec.Command("touch", name)
+		fmt.Printf("Creating file: %s\n", name)
+		_, err := cmd.CombinedOutput()
+		if err != nil {
+			log.Fatal(RED, err, NC)
+		}
+		fmt.Printf("%sSuccessfully created file: %s%s\n", GREEN, name, NC)
 		os.Exit(0)
 	}
 	cmd := exec.Command("mkdir", name)
